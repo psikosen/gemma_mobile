@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:equatable/equatable.dart';
 import 'package:uuid/uuid.dart';
-import '../../../domain/entities/message.dart';
+import '../../../core/di/injection_container.dart';
+import '../../../data/datasources/local/database.dart';
+import '../../../domain/entities/message.dart' as domain;
 import '../../../domain/usecases/get_messages_for_thread_usecase.dart';
 import '../../../domain/usecases/save_message_usecase.dart';
 import '../../../domain/usecases/search_messages_usecase.dart';
@@ -88,8 +91,16 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   ) async {
     final state = this.state;
     try {
+      // First check if the thread exists in the database
+      final threadExists = await _verifyChatThreadExists(event.threadId);
+      
+      if (!threadExists) {
+        // Create a new thread if it doesn't exist
+        await _createChatThread(event.threadId);
+      }
+      
       // Create a new message
-      final message = Message(
+      final message = domain.Message(
         messageId: const Uuid().v4(),
         threadId: event.threadId,
         senderId: 'user', // Fixed user ID for now
@@ -113,6 +124,35 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       }
     } catch (error) {
       emit(MessageError(error.toString()));
+    }
+  }
+  
+  // Helper method to check if a chat thread exists
+  Future<bool> _verifyChatThreadExists(String threadId) async {
+    try {
+      // Using a direct database call for simplicity; in a real app, use a repository
+      final db = sl.get<AppDatabase>();
+      final thread = await db.getChatThreadById(threadId);
+      return thread != null;
+    } catch (e) {
+      return false;
+    }
+  }
+  
+  // Helper method to create a new chat thread
+  Future<void> _createChatThread(String threadId) async {
+    try {
+      // Using a direct database call for simplicity; in a real app, use a repository
+      final db = sl.get<AppDatabase>();
+      await db.insertChatThread(
+        ChatThreadsCompanion(
+          threadId: drift.Value(threadId),
+          name: const drift.Value(null),
+          lastMessageTimestamp: drift.Value(DateTime.now().millisecondsSinceEpoch),
+        ),
+      );
+    } catch (e) {
+      throw Exception('Failed to create chat thread: $e');
     }
   }
 

@@ -10,6 +10,7 @@ import '../../domain/usecases/save_message_usecase.dart';
 import '../../domain/usecases/search_messages_usecase.dart';
 import '../../presentation/bloc/chat_thread/chat_thread_bloc.dart';
 import '../../presentation/bloc/message/message_bloc.dart';
+import '../../presentation/bloc/models/model_bloc.dart';
 import '../security/security_service.dart';
 
 /// A simple service locator pattern implementation for dependency injection.
@@ -40,6 +41,7 @@ class ServiceLocator {
   // BLoCs
   late final ChatThreadBloc _chatThreadBloc;
   late final MessageBloc _messageBloc;
+  late final ModelBloc _modelBloc;
 
   /// Initialize all dependencies
   Future<void> init() async {
@@ -74,8 +76,10 @@ class ServiceLocator {
       saveMessageUseCase: _saveMessageUseCase,
       searchMessagesUseCase: _searchMessagesUseCase,
     );
+    _modelBloc = ModelBloc();
     _register<ChatThreadBloc>(_chatThreadBloc);
     _register<MessageBloc>(_messageBloc);
+    _register<ModelBloc>(_modelBloc);
   }
 
   /// Register a dependency
@@ -100,6 +104,9 @@ class ServiceLocator {
     BlocProvider<MessageBloc>(
       create: (context) => _messageBloc,
     ),
+    BlocProvider<ModelBloc>(
+      create: (context) => _modelBloc,
+    ),
   ];
 
   /// Clean up resources
@@ -107,6 +114,7 @@ class ServiceLocator {
     await _database.close();
     await _chatThreadBloc.close();
     await _messageBloc.close();
+    await _modelBloc.close();
   }
 }
 

@@ -17,7 +17,7 @@ class MessageLoading extends MessageState {
 
 class MessageLoaded extends MessageState {
   final String threadId;
-  final List<Message> messages;
+  final List<domain.Message> messages;
   final bool hasReachedMax;
 
   const MessageLoaded({
@@ -28,7 +28,7 @@ class MessageLoaded extends MessageState {
 
   MessageLoaded copyWith({
     String? threadId,
-    List<Message>? messages,
+    List<domain.Message>? messages,
     bool? hasReachedMax,
   }) {
     return MessageLoaded(
@@ -60,7 +60,7 @@ class MessageSearching extends MessageState {
 }
 
 class MessageSearchResults extends MessageState {
-  final List<Message> messages;
+  final List<domain.Message> messages;
 
   const MessageSearchResults({required this.messages});
 

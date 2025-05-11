@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/di/injection_container.dart';
 import '../../core/security/security_service.dart';
 import 'passcode_setup_page.dart';
+import 'model_management_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -127,6 +128,29 @@ class _SettingsPageState extends State<SettingsPage> {
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     // Navigate to privacy policy
+                  },
+                ),
+                const Divider(),
+                const ListTile(
+                  title: Text(
+                    'AI Models',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Manage AI Models'),
+                  subtitle: const Text('Download and manage local AI models'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ModelManagementPage(),
+                      ),
+                    );
                   },
                 ),
               ],
