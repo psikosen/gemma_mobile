@@ -1,0 +1,42 @@
+# RCHAT Development Log
+
+## 2025-05-11
+- Created `create_rchat.sh` script to initialize the Flutter project with SQLite (via Drift)
+- Set up initial project management files (TODO.md, development_log.md)
+- Planned architecture for fully offline local chat application using Clean Architecture
+- Successfully executed the script to create the Flutter project with SQLite (Drift) dependencies
+- Moved all documentation files to the project's docs directory
+- Set up the basic Clean Architecture structure:
+  - Created domain entities (Message, ChatThread)
+  - Created repository interfaces
+  - Created core use cases
+  - Implemented Drift database with all necessary tables and queries
+  - Implemented repository implementations
+  - Created a simple dependency injection system
+- Successfully generated Drift database code using build_runner
+- Updated the main.dart file with a basic skeleton
+- Implemented presentation layer with BLoC pattern
+  - Added flutter_bloc and equatable packages
+  - Created ChatThreadBloc for managing thread list state
+  - Created MessageBloc for managing message state including sending and loading
+- Implemented UI components
+  - Created ChatThreadItem widget for displaying thread items
+  - Created MessageBubble widget for displaying messages
+  - Implemented ChatThreadsPage for listing all chats
+  - Implemented MessagePage for viewing and sending messages in a specific thread
+  - Added pagination for both thread and message lists
+  - Set up navigation between screens
+- Implemented search functionality
+  - Created SearchPage to allow users to search messages
+  - Integrated with the existing SearchMessagesUseCase
+  - Added navigation from search results to the original message thread
+- Implemented passcode protection
+  - Added flutter_secure_storage, local_auth, and crypto dependencies
+  - Created a SecurityService for managing passcodes and biometric authentication
+  - Implemented passcode setup and verification screens
+  - Added a settings page for configuring security options
+  - Updated the database to use encryption with the passcode-derived key
+  - Modified the app entry point to check for passcode before showing content
+- Next steps:
+  - Add unit and integration tests
+  - Polish UI with animations and improved design
